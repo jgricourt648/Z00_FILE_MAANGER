@@ -1,0 +1,164 @@
+<mvc:View
+	controllerName="com.sap.ca.myfilemanager.Z00_FILE_MANAGER.controller.Worklist"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+	xmlns:table="sap.ui.table"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.f.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar">
+
+	<semantic:SemanticPage
+		id="page"
+		busy="{worklistView>/busy}"
+	    busyDelay="{worklistView>/delay}"		
+		headerPinnable="false"
+		toggleHeaderOnTitleClick="false"
+		fitContent="true">
+
+		<semantic:titleHeading>
+			<Title text="{i18n>worklistTitle}" />
+		</semantic:titleHeading>
+
+		<semantic:content>
+
+        <l:Splitter id="mainSplitter" height="100%">
+            <l:contentAreas>
+                <!--<ScrollContainer vertical="false" horizontal="true" height="100%">-->
+
+					<table:TreeTable id="idDirectoryTable"
+					                 selectionMode="Single"
+					                 height="100%"
+					                 rowSelectionChange="onSelectionChange"
+					                 visibleRowCountMode="Auto"
+									 rows="{
+									   path: 'dataModel>/FileTree',
+			                		   parameters: {
+			                           arrayNames: ['nodes']
+			                    	   },
+        						 	   filters: [{path: 'Type', operator: 'EQ', value1: 'D'}]
+			                    	 }">
+            	  	<table:layoutData>
+                        <l:SplitterLayoutData size="{worklistView>/sMainWidth}" minSize="200px" resizable="{worklistView>/bResizable}"/>
+        			</table:layoutData>						
+						<table:extension>
+						        <OverflowToolbar style="Clear">
+						            <Title text="Explorateur de fichiers"/>
+						            <ToolbarSpacer/>
+						            <Button 
+						                icon="sap-icon://Chart-Tree-Map" 
+						                text="Analyser l'espace" 
+						                press="onAnalyseSpace" 
+						                type="Emphasized"/>
+									<ToggleButton 
+									            icon="sap-icon://action-settings" 
+									            pressed="{worklistView>/showFiles}"
+									            press="onToggleFiles"
+									            tooltip="Masquer/Afficher les fichiers dans l'arborescence"/>						                
+						        </OverflowToolbar>
+						    </table:extension>			
+							<table:columns>
+						        <table:Column label="Nom"><table:template><Text text="{dataModel>Name}"/></table:template></table:Column>
+						        <table:Column label="Taille" width="12rem" hAlign="End"><table:template><Text text="{dataModel>FormattedSize}"/></table:template></table:Column>
+						    </table:columns>
+					</table:TreeTable>	
+                <!--</ScrollContainer>-->
+				<!--<ScrollContainer id="detailArea">-->
+
+					<table:Table id="idDetailTable"
+						selectionMode="Single"
+					    visibleRowCountMode="Auto"
+					    minAutoRowCount="5"
+					    rows="{dataModel>nodes}">
+	            	  	<table:layoutData>
+	                        <l:SplitterLayoutData size="{worklistView>/sDetailWidth}"/>
+	        			</table:layoutData>						
+					    
+					    <table:layoutData>
+					        <l:SplitterLayoutData size="{worklistView>/sDetailWidth}"/>
+					    </table:layoutData>
+					
+					    <table:extension>
+					        <OverflowToolbar style="Clear">
+					            <!--<Title text="Contenu de : {dataModel>Name}"/>-->
+								<Button 
+								     icon="sap-icon://show" 
+								     text="Ouvrir le fichier" 
+								     press="onOpenFileViewer"
+								     type="Emphasized"
+								     tooltip="Ouvrir l'aperçu du fichier sélectionné"/>					            
+					            <ToolbarSpacer/>
+								<SearchField 
+								    width="15rem" 
+								    liveChange=".onSearchDetail" 
+								    placeholder="Filtrer dans ce dossier..." />					            
+					        </OverflowToolbar>
+					    </table:extension>
+					
+					    <table:columns>
+					        <table:Column width="3rem" hAlign="Center">
+					            <Label text="" />
+					            <table:template>
+					                <core:Icon 
+					                    src="{= ${dataModel>Type} === 'D' ? 'sap-icon://folder-blank' : 'sap-icon://document' }" 
+					                    color="{= ${dataModel>Type} === 'D' ? '#EBC351' : '#888888' }"/>
+					            </table:template>
+					        </table:Column>
+					
+					        <table:Column filterProperty="Name" sortProperty="Name">
+					            <Label text="Nom" />
+					            <table:template>
+					                <Text text="{dataModel>Name}" wrapping="false" />
+					            </table:template>
+					        </table:Column>
+
+							<table:Column width="10rem" filterProperty="Owner" sortProperty="Owner">
+					            <Label text="Propriétaire" />
+					            <table:template>
+					                <Text text="{dataModel>Owner}" wrapping="false" />
+					            </table:template>
+						    </table:Column>
+						    
+							<table:Column width="10rem" sortProperty="Date">
+							    <Label text="Créé le" />
+							    <table:template>
+								<Text text="{
+								            path: 'dataModel>Date',
+								            type: 'sap.ui.model.type.Date',
+								            formatOptions: {
+												pattern: 'dd/MM/yyyy'
+								            }
+								        }" wrapping="false" />
+							    </table:template>
+							</table:Column>						    
+					
+					        <table:Column width="10rem" hAlign="End" sortProperty="Size">
+					            <Label text="Taille" />
+					            <table:template>
+					                <Text text="{dataModel>FormattedSize}" wrapping="false" />
+					            </table:template>
+					        </table:Column>
+				
+					    </table:columns>
+					</table:Table>
+                <!--</ScrollContainer>                    -->
+            </l:contentAreas>
+        </l:Splitter>
+		
+		</semantic:content>
+
+		<semantic:sendEmailAction>
+			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
+		</semantic:sendEmailAction>
+
+		<semantic:shareInJamAction>
+			<semantic:ShareInJamAction id="shareInJam" visible="{FLP>/isShareInJamActive}" press="onShareInJamPress"/>
+		</semantic:shareInJamAction>
+
+		<semantic:saveAsTileAction>
+			<footerbar:AddBookmarkButton id ="shareTile" title="{worklistView>/saveAsTileTitle}" />
+		</semantic:saveAsTileAction>
+
+	</semantic:SemanticPage>
+
+</mvc:View>

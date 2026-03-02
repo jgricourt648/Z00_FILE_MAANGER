@@ -1,0 +1,23 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:ce="sap.ui.codeeditor">
+    <Dialog
+        title="{viewer>/title}"
+        contentWidth="80%"
+        contentHeight="80%"
+        verticalScrolling="false"
+        resizable="true">
+        <content>
+            <ce:CodeEditor
+                id="myCodeEditor"
+                value="{viewer>/content}"
+                type="{viewer>/type}"
+                editable="false"
+                height="100%"
+                width="100%" />
+        </content>
+        <buttons> <Button text="Fermer" press=".onCloseViewer" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

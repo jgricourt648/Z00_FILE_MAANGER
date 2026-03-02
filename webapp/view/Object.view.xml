@@ -1,0 +1,41 @@
+<mvc:View
+	controllerName="com.sap.ca.myfilemanager.Z00_FILE_MANAGER.controller.Object"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.f.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar">
+
+	<semantic:SemanticPage
+		id="page"
+		headerPinnable="false"
+		toggleHeaderOnTitleClick="false"
+		busy="{objectView>/busy}"
+		busyIndicatorDelay="{objectView>/delay}">
+
+		<semantic:titleHeading>
+			<Title text="{Name}" />
+		</semantic:titleHeading>
+
+		<semantic:headerContent>
+			<ObjectNumber/>
+		</semantic:headerContent>
+
+		<semantic:content>
+			<Table id="ReportListId"
+					items="{dataModel>/data}"
+					noDataText="{i18n>detailLineItemTableNoDataText}"
+					busyIndicatorDelay="{detailView>/tableDelay}">
+				<columns></columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</semantic:content>
+			
+
+	</semantic:SemanticPage>
+
+</mvc:View>

@@ -1,0 +1,32 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mc="sap.suite.ui.microchart">
+    <Dialog title="Répartition de l'espace (Top 6)" contentWidth="800px" contentHeight="350px">
+        <content>
+ <!--           <FlexBox alignItems="Center" justifyContent="Center" width="100%" height="300px"> -->
+			<FlexBox width="100%" height="100%" alignItems="Center" justifyContent="Center">
+                <items>
+                    <VBox width="90%" height="325px" alignItems="Center" justifyContent="Center">           	
+	                    <mc:InteractiveDonutChart 
+	                	    displayedSegments="10"
+	                	    selectionLimit="1"
+	    					selectionEnabled="true"
+	                        selectionChanged="onChartSelection"
+	                        segments="{analysisModel>/items}">
+	                        <mc:segments>
+	                            <mc:InteractiveDonutChartSegment 
+	                                label="{analysisModel>Name}" 
+	                                value="{analysisModel>SizePercentage}" 
+	                                displayedValue="{analysisModel>FormattedSize}"/>
+	                        </mc:segments>
+	                    </mc:InteractiveDonutChart>
+					</VBox>
+                </items>
+            </FlexBox>
+        </content>
+        <beginButton>
+            <Button text="Fermer" press="onCloseAnalysis" type="Emphasized"/>
+        </beginButton>
+    </Dialog>
+</core:FragmentDefinition>
